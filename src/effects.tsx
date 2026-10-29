@@ -273,7 +273,7 @@ export function StyleCarousel({ slides, intervalMs = 4000 }: { slides: StyleSlid
   );
 }
 
-export type LayoutItem = { id: string; name: string; use: string; description: string; kind: 'hero' | 'bento' | 'split' | 'editorial' | 'dashboard' | 'pricing' | 'portfolio' | 'product' };
+export type LayoutItem = { id: string; name: string; use: string; description: string; kind: 'hero' | 'bento' | 'split' | 'editorial' | 'dashboard' | 'pricing' | 'portfolio' | 'product' | 'video' | 'pricingfaq' | 'docs' | 'blog' };
 
 function Wireframe({ kind }: { kind: LayoutItem['kind'] }) {
   const bar = 'rounded bg-slate-200';
@@ -297,6 +297,14 @@ function Wireframe({ kind }: { kind: LayoutItem['kind'] }) {
       return <div className="grid grid-cols-3 gap-2 p-3"><div className={`${dark} h-12`} /><div className={`${bar} h-12`} /><div className={`${bar} h-12`} /><div className={`${line} col-span-3`} /></div>;
     case 'product':
       return <div className="space-y-2 p-3"><div className={`${dark} h-12`} /><div className="flex gap-2"><div className={`${bar} h-6 flex-1`} /><div className={`${bar} h-6 flex-1`} /><div className={`${bar} h-6 flex-1`} /></div></div>;
+    case 'video':
+      return <div className="space-y-2 p-3"><div className={`${dark} flex h-14 items-center justify-center`}><span className={`${accent} flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-black text-slate-900`}>▶</span></div><div className={`${line} w-2/3`} /><div className={`${line} w-1/3`} /></div>;
+    case 'pricingfaq':
+      return <div className="space-y-2 p-3"><div className="flex gap-2"><div className={`${bar} h-8 flex-1`} /><div className={`${dark} h-8 flex-1`} /></div><div className={line} /><div className={line} /><div className={`${line} w-2/3`} /></div>;
+    case 'docs':
+      return <div className="flex gap-2 p-3"><div className="w-10 space-y-1.5"><div className={line} /><div className={line} /><div className={`${accent} h-2 w-6`} /><div className={line} /></div><div className="flex-1 space-y-2"><div className={`${dark} h-4 w-1/2`} /><div className={line} /><div className={line} /><div className={`${line} w-2/3`} /></div></div>;
+    case 'blog':
+      return <div className="space-y-2 p-3">{[0, 1, 2].map((i) => (<div key={i} className="flex items-center gap-2"><div className={`${i === 0 ? dark : bar} h-6 w-10 shrink-0`} /><div className="flex-1 space-y-1"><div className={line} /><div className={`${line} w-2/3`} /></div></div>))}</div>;
   }
 }
 

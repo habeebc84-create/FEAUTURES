@@ -11,3 +11,7 @@ React + Vite + TypeScript + Tailwind CSS + Motion. Run `npm install`, then `npm 
 ## Open source section
 
 All open-source items from the website-build toolkit, checked live on GitHub on 29 October 2026 (repo, licence, stars, last push). Live demos, loaded lazily: GSAP 3.13 timeline + ScrollTrigger scrub, Anime.js 4.1 stagger, Lenis 1.3 smooth scroll. Everything else is a catalogue entry with its GitHub link, including Motion, Three.js, Lottie, Barba.js, Tailwind, shadcn/ui, Radix Colors, Lucide, Heroicons, Feather, Fontsource, Open Design, Agent-Reach, the Muse 3D repos, starters, and the awesome lists. "No licence detected" means GitHub found no licence file — check before reuse.
+
+## Free templates + how to use
+
+Free template libraries (Figma Community, Webflow, Jitter) checked 29 October 2026 — catalogue and links only, no template design, code, image or branding copied; Figma's listing showed no licence wording, so each file must be checked on its own page. A "How to use all of this" guide ties the whole page together in six steps plus one-line quick starts. Layout wireframes grew from 8 to 12 (video-first hero, pricing + FAQ, docs sidebar, article list), all original.

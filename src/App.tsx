@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Suspense, lazy } from 'react';
 import { Github } from 'lucide-react';
 import { OPEN_SOURCE } from './opensource';
+import { TEMPLATE_SOURCES, HOW_TO_USE, QUICK_STARTS } from './templates';
 
 const GsapDemo = lazy(() => import('./demos').then((m) => ({ default: m.GsapDemo })));
 const AnimeDemo = lazy(() => import('./demos').then((m) => ({ default: m.AnimeDemo })));
@@ -26,6 +27,8 @@ const NAV = [
   { href: '#trends', label: 'Trends' },
   { href: '#styles', label: 'Styles' },
   { href: '#opensource', label: 'Open Source' },
+  { href: '#templates', label: 'Free Templates' },
+  { href: '#howto', label: 'How to Use' },
   { href: '#sources', label: 'Sources' },
   { href: '#honesty', label: 'Honesty' },
 ];
@@ -39,6 +42,10 @@ const LAYOUTS = [
   { id: 'pricing', name: 'Pricing tiers', use: 'Landing', description: 'Three options, the middle one clearly recommended.', kind: 'pricing' as const },
   { id: 'portfolio', name: 'Minimal portfolio', use: 'Content', description: 'Work first, neutral palette, light motion, even spacing.', kind: 'portfolio' as const },
   { id: 'product', name: 'Product centred', use: 'Product', description: 'The product fills the view, proof sits below it.', kind: 'product' as const },
+  { id: 'video', name: 'Video-first hero', use: 'Landing', description: 'A motion clip carries the story; headline and one action sit on top.', kind: 'video' as const },
+  { id: 'pricingfaq', name: 'Pricing + FAQ', use: 'Landing', description: 'Tiers answer the price question, questions below answer the rest.', kind: 'pricingfaq' as const },
+  { id: 'docs', name: 'Docs with sidebar', use: 'Content', description: 'Navigation on the left, one idea per page, search on top.', kind: 'docs' as const },
+  { id: 'blog', name: 'Article list', use: 'Content', description: 'Image, title, summary, date. The list is the navigation.', kind: 'blog' as const },
 ];
 
 const STYLE_SLIDES = [
@@ -204,6 +211,24 @@ const SOURCES = [
     text: '4,988 designs in a text copy crawled 30 March 2025 — stale, so only template categories and structure ideas are taken from it, and the live page must be re-checked before relying on any specific shot. Top entries in that copy: hero-header builders, HR, fintech and SaaS templates, and many crypto and finance dashboards.',
     added: 'Ten recurring patterns from the 27 October Dribbble research are in the Dribbble section. Inspiration only: never copy shots, branding, images or code, and check each template’s licence.',
   },
+  {
+    name: 'Figma Community — website templates',
+    url: 'https://www.figma.com/community/website-templates?resource_type=files',
+    text: '10,000+ free website templates and themes, 21 pages on the Popular sort. First 15 files all marked Free. The listing page showed no licence wording, so each file must be checked on its own page. Checked with a live browser read 29 October 2026.',
+    added: 'The library, its categories and filters, the most-duplicated free files and the duplicate-into-drafts flow are in the Free Templates section. No file is copied.',
+  },
+  {
+    name: 'Webflow templates',
+    url: 'https://webflow.com/templates',
+    text: '7,000+ free and premium HTML templates. Free templates are customisable and responsive with core features; a free Starter workspace covers building, a paid Site Plan covers a custom domain. Checked in full 29 October 2026; the free-templates listing itself did not load in text form, so no individual template names are claimed.',
+    added: 'Template types, categories, free status and the in-Webflow workflow are in the Free Templates section.',
+  },
+  {
+    name: 'Jitter templates',
+    url: 'https://jitter.video/templates/',
+    text: 'Free motion graphics templates, editable in Jitter and usable for commercial purposes, with the Max plan for more export formats and resolutions. Checked in full 29 October 2026; individual template names were not listed in the text read.',
+    added: 'Use cases, editing flow and export notes are in the Free Templates section.',
+  },
 ];
 
 function SectionHeading({ children }: { children: string }) {
@@ -252,7 +277,7 @@ export default function App() {
             </p>
             <Typewriter
               className="mt-4 text-lg font-semibold text-lime-200"
-              phrases={['13 Figma trends', '9 Tilda styles', '2,000+ Refero systems', '57 UI styles', '8 layout patterns', '11 live effects']}
+              phrases={['13 Figma trends', '9 Tilda styles', '2,000+ Refero systems', '57 UI styles', '12 layout patterns', '11 live effects']}
             />
             <div className="mt-7 flex flex-wrap gap-3">
               <a href="#layouts" className="rounded-full bg-lime-400 px-6 py-3 font-bold text-slate-950">See the layouts ↓</a>
@@ -555,8 +580,65 @@ export default function App() {
             </p>
           </Reveal>
 
+          <Reveal id="templates" className="scroll-mt-24">
+            <SectionHeading>Free templates, from the three libraries you sent</SectionHeading>
+            <Note>
+              Checked 29 October 2026. Nothing from these libraries is copied into this site — no template
+              design, code, image or branding. What is listed here is what each library offers free, how to
+              use it, and a link out. Figma’s listing page showed no licence wording, so each Figma file
+              must be checked on its own page before reuse.
+            </Note>
+            {TEMPLATE_SOURCES.map((s) => (
+              <div key={s.name} className="mt-8">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <h3 className="text-xl font-bold">{s.name}</h3>
+                  <a href={s.url} target="_blank" rel="noreferrer" className="text-sm font-semibold text-slate-900 underline decoration-emerald-600 decoration-2 underline-offset-4">Open the library ↗</a>
+                </div>
+                <p className="mt-1 text-slate-600">{s.headline}</p>
+                <p className="mt-2 text-sm"><span className="font-semibold">Free status: </span><span className="text-slate-600">{s.freeStatus}</span></p>
+                <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600">
+                  {s.facts.map((f) => (<li key={f}>{f}</li>))}
+                </ul>
+                <p className="mt-3 text-sm"><span className="font-semibold">Categories: </span><span className="text-slate-600">{s.categories.join(' · ')}</span></p>
+                <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm text-slate-600">
+                  {s.howTo.map((h) => (<li key={h}>{h}</li>))}
+                </ol>
+                <p className="mt-3 rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900">{s.warning}</p>
+              </div>
+            ))}
+          </Reveal>
+
+          <Reveal id="howto" className="scroll-mt-24">
+            <SectionHeading>How to use all of this</SectionHeading>
+            <Note>
+              Everything on this page, in order. Follow the steps top to bottom and you will have used every
+              section: styles, layouts, free templates, open-source effects, and the source libraries.
+            </Note>
+            <ol className="mt-6 space-y-4">
+              {HOW_TO_USE.map((s) => (
+                <li key={s.step} className="flex gap-4 rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-900 text-sm font-black text-white">{s.step}</span>
+                  <div>
+                    <h3 className="font-bold">{s.title}</h3>
+                    <p className="mt-1 text-sm text-slate-600">{s.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <h3 className="mt-10 text-xl font-bold">Quick starts, one line each</h3>
+            <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+              {QUICK_STARTS.map((q) => (
+                <article key={q.tool} className="rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <h4 className="font-bold">{q.tool}</h4>
+                  <p className="mt-1 text-sm"><code className="rounded bg-slate-100 px-1.5 py-0.5 text-xs">{q.install}</code></p>
+                  <p className="mt-2 text-sm text-slate-600">{q.firstUse}</p>
+                </article>
+              ))}
+            </div>
+          </Reveal>
+
           <Reveal id="sources" className="scroll-mt-24">
-            <SectionHeading>The five sources, and what was added</SectionHeading>
+            <SectionHeading>The sources, and what was added</SectionHeading>
             <Note>
               Every source below was fetched and read in depth on 29 October 2026. Open any of them in a new tab.
             </Note>
@@ -592,6 +674,13 @@ export default function App() {
                 colour value, typeface pairing or code from any of them is copied into this site. Figma&apos;s
                 survey figures are Figma-reported. The Dribbble tag listing is a stale March 2025 copy.
                 This is not a food website: there are no food photos, products or prices anywhere on it.
+              </p>
+              <p>
+                The open-source catalogue lists each repository&apos;s licence, stars and last push as checked
+                live on GitHub on 29 October 2026. The free-template libraries are linked, not copied: no
+                template design, code, image or branding from Figma Community, Webflow or Jitter appears on
+                this site, and Figma&apos;s listing showed no licence wording, so each file must be checked on
+                its own page before reuse.
               </p>
               <p>
                 All motion on this page is static when you prefer reduced motion. The ticker pauses on hover
