@@ -35,11 +35,7 @@ const NAV = [
   { href: '#templates', label: 'Templates' },
   { href: '#howto', label: 'How to Use' },
   { href: '#docs', label: 'Docs' },
-  { href: '#generative', label: 'Generative' },
-  { href: '#a11y', label: 'A11y' },
   { href: '#free', label: 'Free to Use' },
-  { href: '#sources', label: 'Sources' },
-  { href: '#honesty', label: 'Honesty' },
 ];
 
 export const LAYOUTS = [
@@ -85,9 +81,9 @@ const STYLE_SLIDES = [
     label: 'Brutalism and neobrutalism: loud on purpose',
     node: (
       <div className="flex h-full flex-col justify-center bg-yellow-300 px-8 sm:px-14">
-        <p className="text-xs font-bold uppercase tracking-widest text-slate-900">Style 03 — Brutalism</p>
-        <p className="mt-3 max-w-xl text-4xl font-extrabold leading-tight text-slate-900 underline decoration-pink-500 decoration-4 sm:text-5xl">BREAK THE GRID.</p>
-        <p className="mt-3 max-w-lg font-semibold text-slate-900">Clashing colour, oversized type, hard shadows. Bold startups, edgy brands, portfolios that challenge.</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-slate-950">Style 03 — Brutalism</p>
+        <p className="mt-3 max-w-xl text-4xl font-extrabold leading-tight text-slate-950 underline decoration-pink-500 decoration-4 sm:text-5xl">BREAK THE GRID.</p>
+        <p className="mt-3 max-w-lg font-semibold text-slate-950">Clashing colour, oversized type, hard shadows. Bold startups, edgy brands, portfolios that challenge.</p>
       </div>
     ),
   },
@@ -107,9 +103,9 @@ const STYLE_SLIDES = [
     label: 'Bento: tidy tiles, dense content kept clear',
     node: (
       <div className="flex h-full flex-col justify-center bg-emerald-50 px-8 sm:px-14">
-        <p className="text-xs font-bold uppercase tracking-widest text-emerald-700">Style 05 — Bento</p>
-        <p className="mt-3 max-w-xl text-4xl font-extrabold leading-tight text-slate-900 sm:text-5xl">Box it up, neatly.</p>
-        <p className="mt-3 max-w-lg text-slate-600">Rounded tiles, efficient space, readable type, small charts or illustrations. Dashboards, services, dense content.</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-emerald-800">Style 05 — Bento</p>
+        <p className="mt-3 max-w-xl text-4xl font-extrabold leading-tight text-slate-950 sm:text-5xl">Box it up, neatly.</p>
+        <p className="mt-3 max-w-lg text-slate-800">Rounded tiles, efficient space, readable type, small charts or illustrations. Dashboards, services, dense content.</p>
       </div>
     ),
   },

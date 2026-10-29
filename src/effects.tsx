@@ -262,12 +262,14 @@ export function StyleCarousel({ slides, intervalMs = 4000 }: { slides: StyleSlid
         </AnimatePresence>
       </div>
       <p className="sr-only" aria-live="polite">{slide.label}</p>
-      <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-2">
-        <button type="button" onClick={() => go(index - 1)} aria-label="Previous style" className="rounded-full bg-black/50 px-2.5 py-1 text-sm font-bold text-white">‹</button>
-        {slides.map((sl, i) => (
-          <button key={sl.id} type="button" onClick={() => go(i)} aria-label={`Show style ${i + 1}: ${sl.label}`} aria-current={i === index} className={`h-2 rounded-full ${i === index ? 'w-5 bg-white' : 'w-2 bg-white/60'}`} />
-        ))}
-        <button type="button" onClick={() => go(index + 1)} aria-label="Next style" className="rounded-full bg-black/50 px-2.5 py-1 text-sm font-bold text-white">›</button>
+      <div className="absolute inset-x-0 bottom-3 flex justify-center">
+        <div className="flex items-center gap-2 rounded-full bg-slate-950/80 px-3 py-1.5 backdrop-blur">
+          <button type="button" onClick={() => go(index - 1)} aria-label="Previous style" className="rounded-full bg-white/15 px-3.5 py-1.5 text-base font-bold text-white ring-1 ring-white/30">‹</button>
+          {slides.map((sl, i) => (
+            <button key={sl.id} type="button" onClick={() => go(i)} aria-label={`Show style ${i + 1}: ${sl.label}`} aria-current={i === index} className={`h-2.5 rounded-full ${i === index ? 'w-6 bg-white' : 'w-2.5 bg-white/60'}`} />
+          ))}
+          <button type="button" onClick={() => go(index + 1)} aria-label="Next style" className="rounded-full bg-white/15 px-3.5 py-1.5 text-base font-bold text-white ring-1 ring-white/30">›</button>
+        </div>
       </div>
     </div>
   );
