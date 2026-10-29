@@ -1,4 +1,11 @@
 import type { ReactNode } from 'react';
+import { Suspense, lazy } from 'react';
+import { Github } from 'lucide-react';
+import { OPEN_SOURCE } from './opensource';
+
+const GsapDemo = lazy(() => import('./demos').then((m) => ({ default: m.GsapDemo })));
+const AnimeDemo = lazy(() => import('./demos').then((m) => ({ default: m.AnimeDemo })));
+const LenisDemo = lazy(() => import('./demos').then((m) => ({ default: m.LenisDemo })));
 import {
   AnimateText,
   AnimatedNumber,
@@ -18,6 +25,7 @@ const NAV = [
   { href: '#layouts', label: 'Layouts' },
   { href: '#trends', label: 'Trends' },
   { href: '#styles', label: 'Styles' },
+  { href: '#opensource', label: 'Open Source' },
   { href: '#sources', label: 'Sources' },
   { href: '#honesty', label: 'Honesty' },
 ];
@@ -496,6 +504,54 @@ export default function App() {
             <p className="mt-2 text-sm text-slate-500">
               Source: <a href="https://dribbble.com/tags/website-template" target="_blank" rel="noreferrer" className="underline">dribbble.com/tags/website-template</a>.
               Full research notes are kept separately in the build record.
+            </p>
+          </Reveal>
+
+          <Reveal id="opensource" className="scroll-mt-24">
+            <SectionHeading>Open source: every layout and effect library, checked live</SectionHeading>
+            <Note>
+              Every open-source item from the website-build toolkit, checked live on GitHub on 29 October
+              2026: the repo exists, its licence and stars are shown, and its last push date is shown.
+              Three libraries are installed and demoed live below. The rest are catalogue entries: use
+              them only where they fit, verify compatibility, and never install a whole workspace for a
+              normal site build. “No licence detected” means GitHub found no licence file — check before reuse.
+            </Note>
+            <Suspense fallback={<p className="mt-6 text-sm text-slate-500">Loading the live demos…</p>}>
+              <div className="mt-6 grid gap-3 md:grid-cols-3">
+                <GsapDemo />
+                <AnimeDemo />
+                <LenisDemo />
+              </div>
+            </Suspense>
+            {OPEN_SOURCE.map((group) => (
+              <div key={group.group} className="mt-10">
+                <h3 className="text-xl font-bold">{group.group}</h3>
+                <p className="mt-1 text-sm text-slate-500">{group.note}</p>
+                <div className="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                  {group.entries.map((e) => (
+                    <article key={e.name} className="rounded-2xl border border-slate-200 p-5 shadow-sm">
+                      <div className="flex items-start justify-between gap-2">
+                        <h4 className="font-bold">{e.name}</h4>
+                        <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${e.status === 'live demo' ? 'bg-lime-100 text-emerald-800' : e.status === 'stale' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}`}>{e.status}</span>
+                      </div>
+                      <p className="mt-1 text-sm text-slate-600">{e.what}</p>
+                      <p className="mt-2 text-sm"><span className="font-semibold">Use: </span><span className="text-slate-600">{e.use}</span></p>
+                      <p className="mt-2 text-xs text-slate-500">Licence: {e.licence}{e.stars ? ` · ★ ${e.stars}` : ''}{e.pushed ? ` · Last push ${e.pushed}` : ''}</p>
+                      {e.repo && (
+                        <a href={`https://github.com/${e.repo}`} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-slate-900 underline decoration-emerald-600 decoration-2 underline-offset-4">
+                          <Github size={16} aria-hidden="true" /> github.com/{e.repo}
+                        </a>
+                      )}
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <p className="mt-6 text-sm text-slate-500">
+              Also in the toolkit, as web tools rather than repos: 8B animated GSAP templates (8b.com/templates/animated),
+              Muse minisites (landing.muse.io), and GSAP UI component and CDN pages (gsapvault.com). Framer and
+              Webflow are paid builders, not open source, and are not listed here. Counts and stars are
+              GitHub figures as checked 29 October 2026 and will change.
             </p>
           </Reveal>
 
