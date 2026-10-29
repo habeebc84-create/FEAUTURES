@@ -71,6 +71,17 @@ Take only what you need. Every part works on its own.
 | `npm run preview` | Preview the production build locally |
 | `npm run test` | Run the test suite (Vitest) |
 
+## Free to use
+
+The "Free to Use" section of the site has copyable starter code, all original
+to this repo and MIT-licensed: the CSS ticker, the Motion scroll reveal, the
+GSAP timeline, the Anime.js stagger, the Lenis setup, the design tokens, a
+bento grid, and the reduced-motion safety net. The whole repo is MIT-licensed
+(see `LICENSE`). Libraries used keep their own licences (Motion MIT, GSAP
+GreenSock standard licence, Anime.js MIT, Lenis MIT, Tailwind MIT). Template
+designs from Figma, Webflow and Jitter are not included — use those inside
+their own tools, under their own terms.
+
 ## Coding agents
 
 This repo ships instructions for AI coding agents, so an agent can use every

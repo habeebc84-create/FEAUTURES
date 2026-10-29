@@ -3,6 +3,7 @@ import { Suspense, lazy } from 'react';
 import { Github } from 'lucide-react';
 import { OPEN_SOURCE } from './opensource';
 import { TEMPLATE_SOURCES, HOW_TO_USE, QUICK_STARTS } from './templates';
+import { FREE_SNIPPETS, FREE_TO_USE_NOTE, CopyButton } from './freeuse';
 
 const GsapDemo = lazy(() => import('./demos').then((m) => ({ default: m.GsapDemo })));
 const AnimeDemo = lazy(() => import('./demos').then((m) => ({ default: m.AnimeDemo })));
@@ -29,6 +30,7 @@ const NAV = [
   { href: '#opensource', label: 'Open Source' },
   { href: '#templates', label: 'Free Templates' },
   { href: '#howto', label: 'How to Use' },
+  { href: '#free', label: 'Free to Use' },
   { href: '#sources', label: 'Sources' },
   { href: '#honesty', label: 'Honesty' },
 ];
@@ -635,6 +637,29 @@ export default function App() {
                 </article>
               ))}
             </div>
+          </Reveal>
+
+          <Reveal id="free" className="scroll-mt-24">
+            <SectionHeading>Free to use: copy it and build with it</SectionHeading>
+            <Note>{FREE_TO_USE_NOTE}</Note>
+            <div className="mt-6 grid gap-3 md:grid-cols-2">
+              {FREE_SNIPPETS.map((s) => (
+                <article key={s.id} className="flex flex-col rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="font-bold">{s.title}</h3>
+                    <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">{s.language}</span>
+                  </div>
+                  <p className="mt-1 text-sm text-slate-600">{s.use}</p>
+                  <pre className="mt-3 max-h-64 overflow-auto rounded-xl bg-slate-950 p-4 text-left text-xs leading-relaxed text-slate-100"><code>{s.code}</code></pre>
+                  <div className="mt-3 flex justify-end"><CopyButton text={s.code} /></div>
+                </article>
+              ))}
+            </div>
+            <p className="mt-4 text-sm text-slate-500">
+              The whole repo is MIT-licensed too: clone it from{' '}
+              <a href="https://github.com/habeebc84-create/FEAUTURES" target="_blank" rel="noreferrer" className="underline decoration-emerald-600 decoration-2 underline-offset-4">github.com/habeebc84-create/FEAUTURES</a>{' '}
+              and build what you need — see the README for the file map.
+            </p>
           </Reveal>
 
           <Reveal id="sources" className="scroll-mt-24">

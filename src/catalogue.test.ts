@@ -47,6 +47,24 @@ describe('template libraries', () => {
   });
 });
 
+describe('free-to-use snippets', () => {
+  it('has copyable original snippets', async () => {
+    const { FREE_SNIPPETS } = await import('./freeuse');
+    expect(FREE_SNIPPETS.length).toBeGreaterThanOrEqual(8);
+    const ids = FREE_SNIPPETS.map((s) => s.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const s of FREE_SNIPPETS) {
+      expect(s.title.length).toBeGreaterThan(0);
+      expect(s.code.length).toBeGreaterThan(20);
+    }
+    const byId = Object.fromEntries(FREE_SNIPPETS.map((s) => [s.id, s.code]));
+    expect(byId['ticker']).toContain('ticker-scroll');
+    expect(byId['gsap-timeline']).toContain('stagger');
+    expect(byId['lenis']).toContain('prefers-reduced-motion');
+    expect(byId['tokens']).toContain('--accent');
+  });
+});
+
 describe('layout wireframes', () => {
   it('has 12 unique layouts in valid kinds', () => {
     expect(LAYOUTS).toHaveLength(12);
