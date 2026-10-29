@@ -331,7 +331,7 @@ export default function App() {
           <Reveal id="layouts" className="scroll-mt-24">
             <SectionHeading>Layout ideas, as wireframes</SectionHeading>
             <Note>
-              Eight layout patterns, drawn as wireframes so the structure is what you judge, not a photo.
+              Twelve layout patterns, drawn as wireframes so the structure is what you judge, not a photo.
               Filter by what the page has to do. Patterns are drawn from the Dribbble research and the five sources below.
             </Note>
             <div className="mt-6">

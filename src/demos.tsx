@@ -54,7 +54,7 @@ export function GsapDemo() {
         Press Play: a timeline staggers six tiles in. The green bar below fills as you scroll this section,
         tied to scroll position with scrub.
       </p>
-      <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
+      <div className="mt-4 grid grid-cols-3 gap-2">
         {['Hero', 'Cards', 'Nav', 'Form', 'Chart', 'Footer'].map((t) => (
           <div key={t} className="gsap-tile rounded-xl bg-slate-900 px-2 py-6 text-center text-sm font-bold text-white">{t}</div>
         ))}
