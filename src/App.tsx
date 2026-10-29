@@ -31,7 +31,7 @@ const NAV = [
   { href: '#trends', label: 'Trends' },
   { href: '#styles', label: 'Styles' },
   { href: '#opensource', label: 'Open Source' },
-  { href: '#templates', label: 'Free Templates' },
+  { href: '#templates', label: 'Templates' },
   { href: '#howto', label: 'How to Use' },
   { href: '#generative', label: 'Generative' },
   { href: '#a11y', label: 'A11y' },
@@ -271,7 +271,7 @@ export default function App() {
           <a href="#top" className="text-xl font-extrabold tracking-tight">
             FEA<span className="text-emerald-600">UTURES</span>
           </a>
-          <nav className="ml-auto hidden items-center gap-1 md:flex" aria-label="Sections">
+          <nav className="ml-auto hidden items-center gap-1 lg:flex" aria-label="Sections">
             {NAV.map((n) => (
               <a key={n.href} href={n.href} className="rounded-full px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100">{n.label}</a>
             ))}
