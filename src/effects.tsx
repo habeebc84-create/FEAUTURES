@@ -362,9 +362,76 @@ export function AnimatedNumber({ value, format, suffix = '' }: { value: number; 
         controlsRef.current = animate(0, value, { duration: 1.2, ease: 'easeOut', onUpdate: (v) => setDisplay(v) });
       },
       { threshold: 0.4 },
+
     );
     observer.observe(el);
     return () => { observer.disconnect(); controlsRef.current?.stop(); };
   }, [value, reduce]);
   return <span ref={ref}>{format(Math.round(display))}{suffix}</span>;
+}
+
+export function NeuGlassDemo() {
+  return (
+    <div>
+      <h3 className="text-xl font-bold">Neu-Glass: depth from mixed blur</h3>
+      <p className="mt-1 text-sm text-slate-600">
+        Three panels over one gradient: heavy blur, light blur, solid. The depth comes from blur
+        steps, not from shadows. The code is in the Free to Use section.
+      </p>
+      <div className="relative mt-4 overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-950 p-6">
+        <div className="rounded-2xl border border-white/25 bg-white/10 p-5 backdrop-blur-md">
+          <p className="font-semibold text-white">Blur 12px · 10% white</p>
+          <p className="text-sm text-white/80">Farthest back. Readable only for large text.</p>
+        </div>
+        <div className="mt-3 rounded-2xl border border-white/20 bg-white/25 p-5 backdrop-blur-sm">
+          <p className="font-semibold text-white">Blur 4px · 25% white</p>
+          <p className="text-sm text-white/80">Middle layer. Keep text short and bold here.</p>
+        </div>
+        <div className="mt-3 rounded-2xl bg-white p-5">
+          <p className="font-semibold text-slate-900">Solid · no blur</p>
+          <p className="text-sm text-slate-600">Actions and small text go on the solid panel, never on blur.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const BENTO_TILES = [
+  { id: 'main', title: 'Main feature', body: 'One idea, explained well. Click another tile to move the focus.', span: 2 },
+  { id: 'stats', title: 'Stats', body: '13 trends · 9 styles · 12 layouts', span: 1 },
+  { id: 'motion', title: 'Motion', body: 'Springs, stagger, scrub.', span: 1 },
+  { id: 'cta', title: 'Start building', body: 'Pick a style, a layout, one effect.', span: 2 },
+];
+
+export function InteractiveBento() {
+  const reduce = useReducedMotion();
+  const [active, setActive] = useState('main');
+  return (
+    <div>
+      <h3 className="mt-10 text-xl font-bold">Interactive Bento: click a tile, the grid morphs</h3>
+      <p className="mt-1 text-sm text-slate-600">
+        The active tile grows to two columns with a spring layout animation. Under reduced motion
+        the tiles simply swap size with no animation.
+      </p>
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {BENTO_TILES.map((t) => {
+          const isActive = active === t.id;
+          return (
+            <motion.button
+              key={t.id}
+              type="button"
+              layout={!reduce}
+              onClick={() => setActive(t.id)}
+              aria-pressed={isActive}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className={`rounded-2xl border p-5 text-left shadow-sm ${isActive ? 'col-span-2 border-slate-900 bg-slate-900 text-white' : 'border-slate-200 bg-white'}`}
+            >
+              <span className="block font-bold">{t.title}</span>
+              <span className={`mt-1 block text-sm ${isActive ? 'text-slate-300' : 'text-slate-600'}`}>{t.body}</span>
+            </motion.button>
+          );
+        })}
+      </div>
+    </div>
+  );
 }

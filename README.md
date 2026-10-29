@@ -76,11 +76,43 @@ Take only what you need. Every part works on its own.
 The "Free to Use" section of the site has copyable starter code, all original
 to this repo and MIT-licensed: the CSS ticker, the Motion scroll reveal, the
 GSAP timeline, the Anime.js stagger, the Lenis setup, the design tokens, a
-bento grid, and the reduced-motion safety net. The whole repo is MIT-licensed
+bento grid, and the reduced-motion safety net. Every demo card and every
+live demo (GSAP, Anime.js, Lenis, carousel) also has its own Show-the-code
+block and Copy button, and the GSAP/Anime.js demos have sliders to try
+different timings live. The whole repo is MIT-licensed
 (see `LICENSE`). Libraries used keep their own licences (Motion MIT, GSAP
 GreenSock standard licence, Anime.js MIT, Lenis MIT, Tailwind MIT). Template
 designs from Figma, Webflow and Jitter are not included — use those inside
 their own tools, under their own terms.
+
+## Accessibility
+
+The Accessibility section lists, for every effect on the page, what happens
+normally and what happens when the user prefers reduced motion — plus the
+keyboard, contrast and pause checks the page is held to. Dark mode is a
+header toggle (remembered in localStorage); the dark theme is plain CSS
+overrides in `src/index.css`, not a second design system.
+
+## Generative UI
+
+A simulated demo (local rules only, no AI model runs here): type a word and
+the preview swaps headline, accent and layout. It shows the generative-UI
+pattern — prompt in, variant out — honestly labelled.
+
+## CLI
+
+Add one effect to your own project without cloning the whole repo:
+
+```bash
+node cli/index.mjs list
+node cli/index.mjs add ticker
+node cli/index.mjs add cursor-ring ./src/components
+```
+
+Snippets live in `cli/snippets/` (MIT, same licence as the repo). The CLI
+refuses to overwrite an existing file. `npx features` does not work yet —
+that needs the package published to npm; the `bin` field in `package.json`
+is ready for it.
 
 ## Coding agents
 
@@ -102,10 +134,13 @@ motion, verify a library's licence on GitHub before adding it.
 
 ## Tech stack
 
-React 18 + Vite 5 + TypeScript + Tailwind CSS 3 + Motion 14.7 (free, MIT).
+React 19 + Vite 5 + TypeScript + Tailwind CSS v4 (CSS-first config in
+`src/index.css`, `@theme` tokens) + Motion 14.7 (free, MIT; formerly Framer
+Motion — same project, renamed, no separate Framer Motion section is needed).
 Optional demos: GSAP 3.13, Anime.js 4.1, Lenis 1.3, Lucide icons. All motion is
 static under `prefers-reduced-motion`; the ticker and carousel pause on hover/focus
-and the cursor ring never replaces the native cursor.
+and the cursor ring never replaces the native cursor. Dark mode is a header
+toggle backed by plain CSS `.dark` overrides in `src/index.css`.
 
 ## Honesty and licences
 

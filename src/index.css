@@ -1,6 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0f172a;
+  --color-forest-50: #f0fdf4;
+  --color-forest-800: #14532d;
+  --color-forest-900: #052e16;
+  --color-forest-950: #022c22;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+}
 
 html { scroll-behavior: smooth; }
 body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
@@ -18,3 +25,22 @@ body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/* Dark mode: a .dark class on <html>, toggled from the header and
+   remembered in localStorage. Plain CSS overrides so the theme works
+   without restyling every component: the page shell, cards, borders
+   and secondary text flip; dark tiles, buttons and the hero/footer
+   stay dark in both themes. */
+.dark .bg-white { background-color: #020617; }
+.dark .bg-white\/90 { background-color: rgb(2 6 23 / 0.9); }
+.dark .bg-slate-50 { background-color: #0f172a; }
+.dark .bg-slate-100 { background-color: #1e293b; }
+.dark .bg-slate-800 { background-color: #64748b; }
+.dark .text-slate-900 { color: #f1f5f9; }
+.dark .text-slate-700 { color: #e2e8f0; }
+.dark .text-slate-600 { color: #cbd5e1; }
+.dark .text-slate-500 { color: #94a3b8; }
+.dark .text-emerald-700 { color: #34d399; }
+.dark .border-slate-200 { border-color: #334155; }
+.dark .border-slate-300 { border-color: #475569; }
+.dark .hover\:bg-slate-100:hover { background-color: #1e293b; }

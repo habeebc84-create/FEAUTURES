@@ -192,6 +192,247 @@ export function CopyButton({ text }: { text: string }) {
   );
 }
 
+export type EffectCode = { id: string; title: string; code: string };
+
+export const EFFECT_CODES: EffectCode[] = [
+  {
+    id: 'splitText',
+    title: 'splitText',
+    code: `import { motion, useReducedMotion } from "motion/react";
+
+function SplitHeading({ words }) {
+  const reduce = useReducedMotion();
+  return (
+    <h1>
+      <span className="sr-only">{words.join(" ")}</span>
+      <span aria-hidden="true">
+        {words.map((w, i) => (
+          <motion.span
+            key={i}
+            className="inline-block"
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.08 * i }}
+          >
+            {w}&nbsp;
+          </motion.span>
+        ))}
+      </span>
+    </h1>
+  );
+}`,
+  },
+  {
+    id: 'AnimateText',
+    title: 'AnimateText',
+    code: `import { motion, useReducedMotion } from "motion/react";
+
+// One heading, revealed letter by letter. Under reduced motion it
+// renders as plain text — the heading is never hidden behind motion.
+function AnimateText({ text }) {
+  const reduce = useReducedMotion();
+  if (reduce) return <h2>{text}</h2>;
+  return (
+    <h2 aria-label={text}>
+      {text.split("").map((c, i) => (
+        <motion.span
+          key={i}
+          className="inline-block"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.02 }}
+        >
+          {c === " " ? "\\u00A0" : c}
+        </motion.span>
+      ))}
+    </h2>
+  );
+}`,
+  },
+  {
+    id: 'AnimateView',
+    title: 'AnimateView',
+    code: `import { motion, useReducedMotion } from "motion/react";
+
+// Reveal once, when the section scrolls into view.
+function Reveal({ children }) {
+  const reduce = useReducedMotion();
+  if (reduce) return <section>{children}</section>;
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+    >
+      {children}
+    </motion.section>
+  );
+}`,
+  },
+  {
+    id: 'Typewriter',
+    title: 'Typewriter',
+    code: `// Type one phrase, delete it, type the next. Plain text is
+// always in the DOM for screen readers; the animation only
+// changes which slice is shown.
+const [index, setIndex] = useState(0);
+const [shown, setShown] = useState("");
+useEffect(() => {
+  const phrase = phrases[index % phrases.length];
+  if (shown.length < phrase.length) {
+    const id = setTimeout(() => setShown(phrase.slice(0, shown.length + 1)), 55);
+    return () => clearTimeout(id);
+  }
+  const id = setTimeout(() => {
+    setShown("");
+    setIndex((i) => i + 1);
+  }, 1600);
+  return () => clearTimeout(id);
+}, [shown, index]);`,
+  },
+  {
+    id: 'ScrambleText',
+    title: 'ScrambleText',
+    code: `// Settle one character at a time from random glyphs into the
+// final text. Re-runs on hover. Static under reduced motion.
+const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&";
+useEffect(() => {
+  const start = Date.now();
+  const id = setInterval(() => {
+    const progress = Math.min(1, (Date.now() - start) / 700);
+    const settled = Math.floor(progress * text.length);
+    setDisplay(
+      text.split("").map((c, i) =>
+        i < settled || c === " " ? c : CHARS[Math.floor(Math.random() * CHARS.length)]
+      ).join("")
+    );
+    if (progress >= 1) clearInterval(id);
+  }, 30);
+  return () => clearInterval(id);
+}, [run, text]);`,
+  },
+  {
+    id: 'Cursor',
+    title: 'Cursor',
+    code: `import { motion, useMotionValue, useSpring, useReducedMotion } from "motion/react";
+
+// Spring ring that trails the pointer. Desktop fine-pointer
+// only, native cursor kept, nothing rendered under reduced motion.
+// The ring is centred by an INNER element — never put the spring
+// position and a -50% translate on the same element.
+const x = useMotionValue(-100);
+const y = useMotionValue(-100);
+const springX = useSpring(x, { stiffness: 250, damping: 25, mass: 0.6 });
+const springY = useSpring(y, { stiffness: 250, damping: 25, mass: 0.6 });
+useEffect(() => {
+  const move = (e) => { x.set(e.clientX); y.set(e.clientY); };
+  window.addEventListener("pointermove", move);
+  return () => window.removeEventListener("pointermove", move);
+}, [x, y]);
+
+<motion.div className="pointer-events-none fixed left-0 top-0 z-[90]"
+  style={{ x: springX, y: springY }} aria-hidden="true">
+  <motion.div className="-translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-lime-500"
+    animate={{ width: hovering ? 44 : 28, height: hovering ? 44 : 28 }} />
+</motion.div>`,
+  },
+  {
+    id: 'carousel',
+    title: 'Carousel + Curtains',
+    code: `import { AnimatePresence, motion } from "motion/react";
+
+// Auto-advance, pause on hover/focus, curtain panels parting
+// from the centre on every slide change.
+const [index, setIndex] = useState(0);
+useEffect(() => {
+  if (reduce || paused) return;
+  const id = setInterval(() => setIndex((i) => (i + 1) % slides.length), 4000);
+  return () => clearInterval(id);
+}, [reduce, paused]);
+
+<AnimatePresence mode="wait">
+  <motion.div key={slide.id}
+    initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.35 }}>
+    {slide.node}
+    <span aria-hidden="true" className="pointer-events-none absolute inset-0 flex">
+      <motion.span className="flex-1 bg-slate-950" style={{ originX: 0 }}
+        initial={{ scaleX: 1 }} animate={{ scaleX: 0 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }} />
+      <motion.span className="flex-1 bg-slate-950" style={{ originX: 1 }}
+        initial={{ scaleX: 1 }} animate={{ scaleX: 0 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }} />
+    </span>
+  </motion.div>
+</AnimatePresence>`,
+  },
+  {
+    id: 'neu-glass',
+    title: 'Neu-Glass (mixed blur)',
+    code: `/* Layered depth: one blurred panel, one sharper panel, one
+   solid panel — depth from blur steps, not from shadows. */
+<div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-950 p-6">
+  <div className="rounded-2xl border border-white/25 bg-white/10 p-5 backdrop-blur-md">
+    <p className="text-white">Blur 12px · 10% white</p>
+  </div>
+  <div className="mt-3 rounded-2xl border border-white/20 bg-white/25 p-5 backdrop-blur-sm">
+    <p className="text-white">Blur 4px · 25% white</p>
+  </div>
+  <div className="mt-3 rounded-2xl bg-white p-5">
+    <p className="text-slate-900">Solid · no blur</p>
+  </div>
+</div>`,
+  },
+];
+
+export type FrameworkGuide = { framework: string; install: string; steps: string[] };
+
+export const FRAMEWORK_GUIDES: FrameworkGuide[] = [
+  {
+    framework: 'React + Vite (this site)',
+    install: 'npm install motion',
+    steps: [
+      'Copy a component from the Free to Use section into src/.',
+      'Import it: import { CursorFollower } from "./effects".',
+      'Render it once, near the top of your app. No provider or setup file is needed.',
+      'Keep the reduced-motion checks: every component here returns static content when the user prefers reduced motion.',
+    ],
+  },
+  {
+    framework: 'Next.js (App Router)',
+    install: 'npm install motion',
+    steps: [
+      'Motion, GSAP, Anime.js and Lenis are client-only: put "use client" at the top of any file that imports them.',
+      'Keep them out of Server Components. A server-rendered page can import a small client component that owns the animation.',
+      'Lenis must be created in a useEffect (it touches window). Never create it during server rendering.',
+      'Reduced motion: the same useReducedMotion checks work unchanged in a client component.',
+    ],
+  },
+  {
+    framework: 'Vue',
+    install: 'npm install motion-v',
+    steps: [
+      'Vue uses motion-v, the Vue build of Motion: import { motion } from "motion-v".',
+      'The same props apply: initial, animate, whileInView, AnimatePresence.',
+      'For GSAP and Anime.js, install gsap / animejs and run them in onMounted, cleaning up in onUnmounted.',
+      'Lenis: create it in onMounted and destroy it in onUnmounted.',
+    ],
+  },
+  {
+    framework: 'Plain HTML + JavaScript',
+    install: 'No install — use the CDN builds',
+    steps: [
+      'Motion (vanilla): import { animate } from "motion" — animate(".card", { opacity: [0, 1], y: [16, 0] }).',
+      'GSAP + ScrollTrigger: load both CDN scripts, then gsap.registerPlugin(ScrollTrigger).',
+      'Anime.js: animate(targets, { scale: [1, 1.5], delay: stagger(60) }).',
+      'Lenis: new Lenis({ lerp: 0.1 }) with a requestAnimationFrame loop. Skip it when matchMedia("(prefers-reduced-motion: reduce)").matches.',
+      'Ticker and Neu-Glass need no JavaScript at all — copy the CSS from the Free to Use section.',
+    ],
+  },
+];
+
 export const FREE_TO_USE_NOTE =
   'Everything in this section is original code from this repo, MIT-licensed (see LICENSE). ' +
   'The libraries it uses keep their own licences: Motion MIT, GSAP GreenSock standard licence, ' +

@@ -25,11 +25,13 @@ asking the maintainer.
 |---|---|
 | `src/App.tsx` | The whole page: sections, nav, counters, Sources, Honesty note. `LAYOUTS` (12 wireframes) lives here. |
 | `src/effects.tsx` | Motion effects: ticker, cursor ring, typewriter, scramble, split text, style carousel, layout wireframes, animated numbers, scroll progress. |
-| `src/demos.tsx` | Lazily loaded live demos: GSAP timeline + ScrollTrigger scrub, Anime.js stagger, Lenis smooth scroll. |
+| `src/demos.tsx` | Lazily loaded live demos: GSAP timeline + ScrollTrigger scrub, Anime.js stagger, Lenis smooth scroll, Generative UI simulation. Playground sliders live here. |
 | `src/lenis.ts` | Shared Lenis instance. Never initialise Lenis when `prefers-reduced-motion: reduce` is set. |
 | `src/opensource.tsx` | Open-source catalogue data only (no components). Every entry: name, repo, licence, stars, last push, what it is, how to use it. |
 | `src/templates.tsx` | Free-template library data + the how-to-use guide data only (no components). |
-| `src/index.css` | Tailwind directives, ticker keyframes, reduced-motion rules. |
+| `src/freeuse.tsx` | Copyable starter snippets, per-effect code, framework guides, CopyButton. |
+| `src/index.css` | Tailwind v4 CSS-first entry (`@import "tailwindcss"`, `@theme` tokens), ticker keyframes, reduced-motion rules, `.dark` overrides. |
+| `cli/index.mjs` + `cli/snippets/` | CLI: `list` / `add <effect>`. Snippets are the same MIT code as the site. |
 | `DESIGN.md` | The design system: tokens, styles, layout rules, motion rules. |
 
 ## Rules that must not be broken

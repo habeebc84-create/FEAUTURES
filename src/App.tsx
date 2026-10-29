@@ -1,18 +1,21 @@
 import type { ReactNode } from 'react';
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { Github } from 'lucide-react';
 import { OPEN_SOURCE } from './opensource';
 import { TEMPLATE_SOURCES, HOW_TO_USE, QUICK_STARTS } from './templates';
-import { FREE_SNIPPETS, FREE_TO_USE_NOTE, CopyButton } from './freeuse';
+import { FREE_SNIPPETS, FREE_TO_USE_NOTE, CopyButton, EFFECT_CODES, FRAMEWORK_GUIDES } from './freeuse';
 
 const GsapDemo = lazy(() => import('./demos').then((m) => ({ default: m.GsapDemo })));
 const AnimeDemo = lazy(() => import('./demos').then((m) => ({ default: m.AnimeDemo })));
 const LenisDemo = lazy(() => import('./demos').then((m) => ({ default: m.LenisDemo })));
+const GenerativeUIDemo = lazy(() => import('./demos').then((m) => ({ default: m.GenerativeUIDemo })));
 import {
   AnimateText,
   AnimatedNumber,
   CursorFollower,
+  InteractiveBento,
   LayoutShowcase,
+  NeuGlassDemo,
   Reveal,
   ScrambleText,
   ScrollProgress,
@@ -30,6 +33,8 @@ const NAV = [
   { href: '#opensource', label: 'Open Source' },
   { href: '#templates', label: 'Free Templates' },
   { href: '#howto', label: 'How to Use' },
+  { href: '#generative', label: 'Generative' },
+  { href: '#a11y', label: 'A11y' },
   { href: '#free', label: 'Free to Use' },
   { href: '#sources', label: 'Sources' },
   { href: '#honesty', label: 'Honesty' },
@@ -242,6 +247,19 @@ function Note({ children }: { children: ReactNode }) {
 }
 
 export default function App() {
+  const [dark, setDark] = useState(false);
+  useEffect(() => {
+    const stored = localStorage.getItem('feautures-theme');
+    const startDark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setDark(startDark);
+    document.documentElement.classList.toggle('dark', startDark);
+  }, []);
+  const toggleDark = () => {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle('dark', next);
+    localStorage.setItem('feautures-theme', next ? 'dark' : 'light');
+  };
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <ScrollProgress />
@@ -259,6 +277,9 @@ export default function App() {
             ))}
           </nav>
           <a href="https://github.com/habeebc84-create/FEAUTURES" target="_blank" rel="noreferrer" className="ml-auto rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white md:ml-0">View code on GitHub</a>
+          <button type="button" onClick={toggleDark} aria-pressed={dark} aria-label="Toggle dark mode" className="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold">
+            {dark ? '☀ Light' : '☾ Dark'}
+          </button>
         </div>
       </header>
 
@@ -307,12 +328,23 @@ export default function App() {
                 { title: 'Typewriter', text: 'The hero line types, deletes, and types the next design fact.' },
                 { title: 'ScrambleText', text: '“Design, studied live” unscrambles on load. Hover it to scramble again.' },
                 { title: 'Cursor', text: 'A spring ring follows your pointer and grows over buttons and links.' },
-              ].map((c) => (
-                <article key={c.title} className="rounded-2xl border border-slate-200 p-5 shadow-sm">
-                  <h3 className="font-bold">{c.title}</h3>
-                  <p className="mt-1 text-sm text-slate-600">{c.text}</p>
-                </article>
-              ))}
+              ].map((c) => {
+                const code = EFFECT_CODES.find((e) => e.title === c.title)?.code ?? '';
+                return (
+                  <article key={c.title} className="flex flex-col rounded-2xl border border-slate-200 p-5 shadow-sm">
+                    <h3 className="font-bold">{c.title}</h3>
+                    <p className="mt-1 text-sm text-slate-600">{c.text}</p>
+                    <details className="mt-3">
+                      <summary className="cursor-pointer text-sm font-semibold text-slate-900">Show the code</summary>
+                      <pre className="mt-2 max-h-64 overflow-auto rounded-xl bg-slate-950 p-4 text-left text-xs leading-relaxed text-slate-100"><code>{code}</code></pre>
+                    </details>
+                    <div className="mt-3 flex justify-end"><CopyButton text={code} /></div>
+                  </article>
+                );
+              })}
+            </div>
+            <div className="mt-6">
+              <NeuGlassDemo />
             </div>
           </Reveal>
 
@@ -326,6 +358,11 @@ export default function App() {
             <div className="mt-6">
               <StyleCarousel slides={STYLE_SLIDES} />
             </div>
+            <details className="mt-4">
+              <summary className="cursor-pointer text-sm font-semibold text-slate-900">Show the carousel + curtains code</summary>
+              <pre className="mt-2 max-h-64 overflow-auto rounded-xl bg-slate-950 p-4 text-left text-xs leading-relaxed text-slate-100"><code>{EFFECT_CODES.find((e) => e.id === 'carousel')?.code ?? ''}</code></pre>
+            </details>
+            <div className="mt-3 flex justify-end"><CopyButton text={EFFECT_CODES.find((e) => e.id === 'carousel')?.code ?? ''} /></div>
           </Reveal>
 
           <Reveal id="layouts" className="scroll-mt-24">
@@ -337,6 +374,7 @@ export default function App() {
             <div className="mt-6">
               <LayoutShowcase items={LAYOUTS} />
             </div>
+            <InteractiveBento />
           </Reveal>
 
           <Reveal id="numbers" className="scroll-mt-24">
@@ -385,6 +423,33 @@ export default function App() {
                 <article key={t.name} className="rounded-2xl border border-slate-200 p-5 shadow-sm">
                   <h3 className="font-bold">{t.name}</h3>
                   <p className="mt-1 text-sm text-slate-600">{t.text}</p>
+                </article>
+              ))}
+            </div>
+            <h3 className="mt-10 text-xl font-bold">Before → After: four trends applied</h3>
+            <Note>
+              Each pair shows the same page before the trend and after it. The “after” side is a CSS
+              sketch, not a copied design.
+            </Note>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              {[
+                { trend: 'Bento grids', before: 'One long list of features, same size, same weight.', after: 'Tiles of different sizes: one big proof tile, small supporting tiles, one action tile.' },
+                { trend: 'Bold typography', before: 'Body-size headline, three lines of explanation above the fold.', after: 'One oversized headline, one line of proof, one action. The type does the selling.' },
+                { trend: 'Dark mode', before: 'White page, grey text, no theme choice; charts unreadable at night.', after: 'Light and dark themes with the same contrast. This page has a Dark toggle in the header.' },
+                { trend: 'Motion design', before: 'Everything appears at once; nothing tells the eye where to look first.', after: 'One reveal per section, one ticker, one progress bar. Motion guides, never decorates.' },
+              ].map((p) => (
+                <article key={p.trend} className="rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <h4 className="font-bold">{p.trend}</h4>
+                  <div className="mt-3 grid grid-cols-2 gap-3">
+                    <div className="rounded-xl bg-slate-100 p-3">
+                      <p className="text-xs font-bold uppercase tracking-widest text-slate-500">Before</p>
+                      <p className="mt-1 text-sm text-slate-600">{p.before}</p>
+                    </div>
+                    <div className="rounded-xl bg-lime-100 p-3">
+                      <p className="text-xs font-bold uppercase tracking-widest text-emerald-700">After</p>
+                      <p className="mt-1 text-sm text-slate-900">{p.after}</p>
+                    </div>
+                  </div>
                 </article>
               ))}
             </div>
@@ -637,6 +702,89 @@ export default function App() {
                 </article>
               ))}
             </div>
+            <h3 className="mt-10 text-xl font-bold">Use it in your framework</h3>
+            <Note>
+              The same effects in React, Next.js, Vue and plain HTML. Motion is Framer Motion
+              renamed — the same project, now called Motion — so there is no separate Framer
+              Motion section: the Motion code on this page is the Framer Motion code.
+            </Note>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              {FRAMEWORK_GUIDES.map((g) => (
+                <article key={g.framework} className="rounded-2xl border border-slate-200 p-5 shadow-sm">
+                  <h4 className="font-bold">{g.framework}</h4>
+                  <p className="mt-1 text-sm"><code className="rounded bg-slate-100 px-1.5 py-0.5 text-xs">{g.install}</code></p>
+                  <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-slate-600">
+                    {g.steps.map((s) => (<li key={s}>{s}</li>))}
+                  </ol>
+                </article>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal id="generative" className="scroll-mt-24">
+            <SectionHeading>Generative UI: the pattern, without pretending</SectionHeading>
+            <Note>
+              Generative UI means the interface changes from what a model returns — a prompt, a
+              summary, a recommendation. No model runs on this page, so the demo below simulates
+              the pattern with local rules. Use the same shape in a real product: prompt in,
+              variant out, always with a plain fallback the user can already see.
+            </Note>
+            <div className="mt-6">
+              <Suspense fallback={<p className="text-sm text-slate-500">Loading the demo…</p>}>
+                <GenerativeUIDemo />
+              </Suspense>
+            </div>
+          </Reveal>
+
+          <Reveal id="a11y" className="scroll-mt-24">
+            <SectionHeading>Accessibility: every effect has a calm version</SectionHeading>
+            <Note>
+              Flashy hubs usually ignore this. Here, every animation on the page has a reduced-motion
+              version that is already built in — not a separate mode to enable. The table lists what
+              actually happens for each effect when a user prefers reduced motion, plus the checks
+              this page is held to.
+            </Note>
+            <div className="mt-6 overflow-x-auto">
+              <table className="w-full min-w-[560px] border-collapse text-left text-sm">
+                <thead>
+                  <tr className="border-b border-slate-200">
+                    <th className="py-2 pr-3 font-bold">Effect</th>
+                    <th className="py-2 pr-3 font-bold">Normal</th>
+                    <th className="py-2 font-bold">Reduced motion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ['Ticker', 'Scrolls continuously, pauses on hover/focus', 'Static line of terms, no movement'],
+                    ['Cursor ring', 'Spring ring trails the pointer', 'Not rendered at all; native cursor only'],
+                    ['Split heading', 'Words fade in one by one', 'Plain heading, fully visible at once'],
+                    ['Section headings', 'Letters reveal one by one', 'Plain heading text'],
+                    ['Scroll reveal', 'Sections rise and fade in once', 'Sections render normally, no animation'],
+                    ['Typewriter', 'Types and deletes phrases', 'First phrase shown as static text'],
+                    ['Scramble', 'Unscrambles on load, re-runs on hover', 'Final text shown immediately'],
+                    ['Carousel', 'Auto-advances, curtain reveal', 'First slide shown, manual controls only'],
+                    ['Animated numbers', 'Count up into view', 'Final value shown immediately'],
+                    ['Scroll progress', 'Bar grows with scroll', 'Not rendered'],
+                    ['GSAP / Anime.js', 'Timeline and stagger play on press', 'Buttons do nothing; content stays visible'],
+                    ['Lenis smooth scroll', 'Page glides', 'Plain jump to the section'],
+                    ['Interactive Bento', 'Tiles morph with a spring', 'Tiles swap size with no animation'],
+                  ].map(([effect, normal, calm]) => (
+                    <tr key={effect} className="border-b border-slate-100">
+                      <td className="py-2 pr-3 font-semibold">{effect}</td>
+                      <td className="py-2 pr-3 text-slate-600">{normal}</td>
+                      <td className="py-2 text-slate-600">{calm}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-slate-600">
+              <li>Keyboard: every control is a real button or link, reachable by Tab, with visible focus.</li>
+              <li>Text: no essential information lives only inside an animation. If motion is off, every fact on the page is still readable.</li>
+              <li>Contrast: body text is slate-900 on white (light) and slate-100 on slate-950 (dark); secondary text never goes below slate-600 / slate-300.</li>
+              <li>Pause: the ticker and carousel pause on hover and focus, and the carousel has previous, next and dot controls.</li>
+              <li>Honesty: phone-width layout and the browser console have not been verified in the remote browser tools available — that limit is stated in the Honesty note, not hidden.</li>
+            </ul>
           </Reveal>
 
           <Reveal id="free" className="scroll-mt-24">

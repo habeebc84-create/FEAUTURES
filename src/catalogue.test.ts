@@ -47,6 +47,30 @@ describe('template libraries', () => {
   });
 });
 
+describe('effect codes and framework guides', () => {
+  it('covers every demo card with copyable code', async () => {
+    const { EFFECT_CODES, FRAMEWORK_GUIDES } = await import('./freeuse');
+    expect(EFFECT_CODES.length).toBeGreaterThanOrEqual(8);
+    for (const e of EFFECT_CODES) {
+      expect(e.code.length).toBeGreaterThan(40);
+    }
+    expect(FRAMEWORK_GUIDES).toHaveLength(4);
+    expect(FRAMEWORK_GUIDES.map((g) => g.framework)).toContain('Next.js (App Router)');
+    expect(FRAMEWORK_GUIDES.map((g) => g.framework)).toContain('Plain HTML + JavaScript');
+  });
+
+  it('ships CLI snippets on disk', async () => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const dir = path.join(process.cwd(), 'cli', 'snippets');
+    const files = fs.readdirSync(dir).filter((f) => f.endsWith('.jsx')).sort();
+    expect(files).toEqual(['bento-grid.jsx', 'cursor-ring.jsx', 'scroll-reveal.jsx', 'ticker.jsx']);
+    for (const f of files) {
+      expect(fs.readFileSync(path.join(dir, f), 'utf8').length).toBeGreaterThan(200);
+    }
+  });
+});
+
 describe('free-to-use snippets', () => {
   it('has copyable original snippets', async () => {
     const { FREE_SNIPPETS } = await import('./freeuse');

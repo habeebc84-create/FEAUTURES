@@ -18,9 +18,14 @@ copying any other brand's system.
 | Shadow | `shadow-sm` on cards | Restraint: one shadow level only. |
 | Spacing | Sections `scroll-mt-24`, content `max-w-6xl`, cards `p-5` | Do not invent new section widths. |
 
-Tailwind config (`tailwind.config.js`) extends exactly these colours and the
-`sans` font family. Do not add new palette colours without updating this file
-and the config together.
+Tailwind v4 is CSS-first: the tokens above live in `@theme` in `src/index.css`
+(`--color-ink`, `--color-forest-*`, `--font-sans`). There is no
+`tailwind.config.js`. Do not add new palette colours without updating this
+file and the `@theme` block together.
+
+Dark mode is not a second system: plain CSS `.dark` overrides at the end of
+`src/index.css` flip the shell, cards, borders and secondary text. Dark
+tiles, buttons, hero and footer stay dark in both themes.
 
 ## Style
 
