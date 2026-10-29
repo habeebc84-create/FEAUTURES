@@ -71,6 +71,18 @@ describe('effect codes and framework guides', () => {
   });
 });
 
+describe('docs section data', () => {
+  it('maps every repo file and links the full documents', async () => {
+    const { DOCS_FILES, DOC_LINKS, DOC_RULES } = await import('./docs');
+    expect(DOCS_FILES.length).toBeGreaterThanOrEqual(10);
+    expect(DOC_LINKS).toHaveLength(5);
+    for (const d of DOC_LINKS) {
+      expect(d.url.startsWith('https://github.com/habeebc84-create/FEAUTURES/blob/main/')).toBe(true);
+    }
+    expect(DOC_RULES.length).toBeGreaterThanOrEqual(5);
+  });
+});
+
 describe('free-to-use snippets', () => {
   it('has copyable original snippets', async () => {
     const { FREE_SNIPPETS } = await import('./freeuse');

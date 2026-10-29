@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { Github } from 'lucide-react';
+import { DOCS_FILES, DOC_LINKS, DOC_RULES } from './docs';
 import { OPEN_SOURCE } from './opensource';
 import { TEMPLATE_SOURCES, HOW_TO_USE, QUICK_STARTS } from './templates';
 import { FREE_SNIPPETS, FREE_TO_USE_NOTE, CopyButton, EFFECT_CODES, FRAMEWORK_GUIDES } from './freeuse';
@@ -33,6 +34,7 @@ const NAV = [
   { href: '#opensource', label: 'Open Source' },
   { href: '#templates', label: 'Templates' },
   { href: '#howto', label: 'How to Use' },
+  { href: '#docs', label: 'Docs' },
   { href: '#generative', label: 'Generative' },
   { href: '#a11y', label: 'A11y' },
   { href: '#free', label: 'Free to Use' },
@@ -267,17 +269,17 @@ export default function App() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-white focus:px-3 focus:py-2">Skip to content</a>
 
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
           <a href="#top" className="text-xl font-extrabold tracking-tight">
             FEA<span className="text-emerald-600">UTURES</span>
           </a>
-          <nav className="ml-auto hidden items-center gap-1 lg:flex" aria-label="Sections">
+          <nav className="ml-auto hidden min-w-0 flex-nowrap items-center gap-1 overflow-x-auto lg:flex" aria-label="Sections">
             {NAV.map((n) => (
-              <a key={n.href} href={n.href} className="rounded-full px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100">{n.label}</a>
+              <a key={n.href} href={n.href} className="whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100">{n.label}</a>
             ))}
           </nav>
-          <a href="https://github.com/habeebc84-create/FEAUTURES" target="_blank" rel="noreferrer" className="ml-auto rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white md:ml-0">View code on GitHub</a>
-          <button type="button" onClick={toggleDark} aria-pressed={dark} aria-label="Toggle dark mode" className="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold">
+          <a href="https://github.com/habeebc84-create/FEAUTURES" target="_blank" rel="noreferrer" className="ml-auto shrink-0 whitespace-nowrap rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white md:ml-0">View code on GitHub</a>
+          <button type="button" onClick={toggleDark} aria-pressed={dark} aria-label="Toggle dark mode" className="shrink-0 whitespace-nowrap rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold">
             {dark ? '☀ Light' : '☾ Dark'}
           </button>
         </div>
@@ -445,9 +447,9 @@ export default function App() {
                       <p className="text-xs font-bold uppercase tracking-widest text-slate-500">Before</p>
                       <p className="mt-1 text-sm text-slate-600">{p.before}</p>
                     </div>
-                    <div className="rounded-xl bg-lime-100 p-3">
-                      <p className="text-xs font-bold uppercase tracking-widest text-emerald-700">After</p>
-                      <p className="mt-1 text-sm text-slate-900">{p.after}</p>
+                    <div className="rounded-xl bg-lime-300 p-3">
+                      <p className="text-xs font-bold uppercase tracking-widest text-emerald-900">After</p>
+                      <p className="mt-1 text-sm text-slate-950">{p.after}</p>
                     </div>
                   </div>
                 </article>
@@ -716,6 +718,43 @@ export default function App() {
                   <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-slate-600">
                     {g.steps.map((s) => (<li key={s}>{s}</li>))}
                   </ol>
+                </article>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal id="docs" className="scroll-mt-24">
+            <SectionHeading>Docs: how this site is built</SectionHeading>
+            <Note>
+              The repo’s own documentation, summarised on the page. Full texts live in the
+              GitHub repo — the links below open them there.
+            </Note>
+            <h3 className="mt-6 text-xl font-bold">Run it</h3>
+            <pre className="mt-3 overflow-auto rounded-xl bg-slate-950 p-4 text-left text-sm leading-relaxed text-slate-100"><code>{`git clone https://github.com/habeebc84-create/FEAUTURES.git
+cd FEAUTURES
+npm ci
+npm run dev      # local preview
+npm run build    # typecheck + production build
+npm test         # catalogue and snippet tests`}</code></pre>
+            <h3 className="mt-8 text-xl font-bold">File map</h3>
+            <div className="mt-3 grid gap-3 md:grid-cols-2">
+              {DOCS_FILES.map((f) => (
+                <article key={f.path} className="rounded-2xl border border-slate-200 p-4 shadow-sm">
+                  <h4 className="font-bold"><code className="text-sm">{f.path}</code></h4>
+                  <p className="mt-1 text-sm text-slate-600">{f.what}</p>
+                </article>
+              ))}
+            </div>
+            <h3 className="mt-8 text-xl font-bold">Rules this repo is held to</h3>
+            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-600">
+              {DOC_RULES.map((r) => (<li key={r}>{r}</li>))}
+            </ul>
+            <h3 className="mt-8 text-xl font-bold">Full documents, in the repo</h3>
+            <div className="mt-3 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+              {DOC_LINKS.map((d) => (
+                <article key={d.label} className="rounded-2xl border border-slate-200 p-4 shadow-sm">
+                  <h4 className="font-bold"><a href={d.url} target="_blank" rel="noreferrer" className="underline">{d.label}</a></h4>
+                  <p className="mt-1 text-sm text-slate-600">{d.what}</p>
                 </article>
               ))}
             </div>

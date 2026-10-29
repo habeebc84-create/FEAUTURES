@@ -44,3 +44,5 @@ body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
 .dark .border-slate-200 { border-color: #334155; }
 .dark .border-slate-300 { border-color: #475569; }
 .dark .hover\:bg-slate-100:hover { background-color: #1e293b; }
+
+.dark header .bg-slate-900 { box-shadow: inset 0 0 0 1px #475569; }

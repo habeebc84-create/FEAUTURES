@@ -198,12 +198,12 @@ export function ScrambleText({ text, accentFrom = -1, className = '' }: { text: 
 export function TickerStrip({ items }: { items: string[] }) {
   const reduce = useReducedMotion();
   const row = items.map((item) => (
-    <span key={item} className="flex shrink-0 items-center gap-3 px-4 text-sm font-semibold text-slate-900">
+    <span key={item} className="flex shrink-0 items-center gap-3 px-4 text-sm font-semibold text-slate-950">
       {item} <span aria-hidden="true" className="text-emerald-600">•</span>
     </span>
   ));
   if (reduce) {
-    return <p className="flex flex-wrap justify-center gap-x-2 gap-y-1 px-4 py-2 text-center text-sm font-semibold text-slate-900">{items.join(' · ')}</p>;
+    return <p className="flex flex-wrap justify-center gap-x-2 gap-y-1 px-4 py-2 text-center text-sm font-semibold text-slate-950">{items.join(' · ')}</p>;
   }
   return (
     <div className="ticker-wrap overflow-hidden border-y border-slate-200 bg-lime-100/70 py-2">
