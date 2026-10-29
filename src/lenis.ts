@@ -12,6 +12,19 @@ export function initLenis() {
     requestAnimationFrame(raf);
   };
   requestAnimationFrame(raf);
+  // Native anchor jumps fight Lenis's scroll control and can land with the
+  // target heading under the sticky header. Route same-page anchor clicks
+  // through the same offset glide as the Sources button. Modifier clicks
+  // and middle clicks are left alone so new-tab behaviour is unchanged.
+  document.addEventListener('click', (e) => {
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const anchor = (e.target as Element).closest?.('a[href^="#"]') as HTMLAnchorElement | null;
+    if (!anchor) return;
+    const hash = anchor.getAttribute('href');
+    if (!hash || hash === '#' || !document.querySelector(hash)) return;
+    e.preventDefault();
+    smoothScrollTo(hash);
+  });
 }
 
 function headerOffset() {
