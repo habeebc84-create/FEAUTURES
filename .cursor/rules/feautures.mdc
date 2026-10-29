@@ -1,0 +1,29 @@
+---
+description: FEAUTURES repo rules — design showcase, no copying, free Motion only, reduced motion always.
+globs:
+  - "src/**/*"
+  - "*.md"
+alwaysApply: true
+---
+
+# FEAUTURES
+
+One-page React + Vite + TypeScript + Tailwind showcase of design ideas,
+layouts, effects, open-source libraries and free template libraries.
+Read `AGENTS.md` and `DESIGN.md` before changing anything.
+
+- Commands: `npm install`, `npm run dev`, `npm run build` (must pass),
+  `npm run test`, `npm run preview`.
+- Never copy designs, code, images or branding from any source or template
+  library. Summarise in original wording, link out, check each licence.
+- Motion+ is paid and off limits. Free MIT Motion library only; never call
+  an effect "Motion+".
+- All motion respects `prefers-reduced-motion: reduce`. Ticker and carousel
+  pause on hover/focus. Cursor ring never replaces the native cursor.
+- Data in `src/opensource.tsx` / `src/templates.tsx`; components in
+  `src/effects.tsx` / `src/demos.tsx`; page in `src/App.tsx`. Heavy demos
+  stay lazily loaded. Tokens exactly as in `DESIGN.md`.
+- Verify a library on GitHub (licence, stars, last push, check date) before
+  adding it. Install only what the page uses.
+- Update Sources, Honesty note and `README.md` in the same change when a
+  claim or structure changes.

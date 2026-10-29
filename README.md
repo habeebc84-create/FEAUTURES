@@ -71,6 +71,24 @@ Take only what you need. Every part works on its own.
 | `npm run preview` | Preview the production build locally |
 | `npm run test` | Run the test suite (Vitest) |
 
+## Coding agents
+
+This repo ships instructions for AI coding agents, so an agent can use every
+feature correctly without guessing:
+
+| File | Agent |
+|---|---|
+| `AGENTS.md` | Every agent — rules, file map, commands, hard limits |
+| `DESIGN.md` | Design system: tokens, style, layout and motion rules |
+| `CLAUDE.md` | Claude Code |
+| `.github/copilot-instructions.md` | GitHub Copilot |
+| `.claude/skills/feautures/SKILL.md` | Claude Code skill (`feautures`) |
+| `.cursor/rules/feautures.mdc` | Cursor |
+
+The rules in short: never copy designs or code from any source or template
+library, Motion+ is paid and off limits, every animation respects reduced
+motion, verify a library's licence on GitHub before adding it.
+
 ## Tech stack
 
 React 18 + Vite 5 + TypeScript + Tailwind CSS 3 + Motion 14.7 (free, MIT).

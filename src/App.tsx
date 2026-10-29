@@ -33,7 +33,7 @@ const NAV = [
   { href: '#honesty', label: 'Honesty' },
 ];
 
-const LAYOUTS = [
+export const LAYOUTS = [
   { id: 'hero', name: 'Typography hero', use: 'Landing', description: 'One oversized headline, one line of proof, one action.', kind: 'hero' as const },
   { id: 'bento', name: 'Bento grid', use: 'Product', description: 'Tiles of different sizes group features without long pages.', kind: 'bento' as const },
   { id: 'split', name: 'Split screen', use: 'Landing', description: 'Visual on one side, message and action on the other.', kind: 'split' as const },

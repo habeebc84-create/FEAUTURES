@@ -1,0 +1,62 @@
+import { describe, expect, it } from 'vitest';
+import { OPEN_SOURCE } from './opensource';
+import { TEMPLATE_SOURCES, HOW_TO_USE, QUICK_STARTS } from './templates';
+import { LAYOUTS } from './App';
+
+describe('open-source catalogue', () => {
+  it('has groups with complete entries', () => {
+    expect(OPEN_SOURCE.length).toBeGreaterThanOrEqual(5);
+    const entries = OPEN_SOURCE.flatMap((g) => g.entries);
+    expect(entries.length).toBeGreaterThanOrEqual(29);
+    for (const e of entries) {
+      expect(e.name.length).toBeGreaterThan(0);
+      expect(e.licence.length).toBeGreaterThan(0);
+      expect(e.what.length).toBeGreaterThan(0);
+      expect(e.use.length).toBeGreaterThan(0);
+      expect(['live demo', 'catalogue', 'workspace tool', 'stale']).toContain(e.status);
+      if (e.repo) expect(e.repo).toMatch(/^[\w.-]+\/[\w.-]+$/);
+    }
+  });
+
+  it('has no duplicate repos', () => {
+    const repos = OPEN_SOURCE.flatMap((g) => g.entries).map((e) => e.repo).filter(Boolean);
+    expect(new Set(repos).size).toBe(repos.length);
+  });
+});
+
+describe('template libraries', () => {
+  it('lists three sources with usable how-to steps', () => {
+    expect(TEMPLATE_SOURCES).toHaveLength(3);
+    for (const s of TEMPLATE_SOURCES) {
+      expect(s.url.startsWith('https://')).toBe(true);
+      expect(s.facts.length).toBeGreaterThan(0);
+      expect(s.howTo.length).toBeGreaterThan(0);
+      expect(s.warning.length).toBeGreaterThan(0);
+      expect(s.categories.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('has a six-step guide in order plus quick starts', () => {
+    expect(HOW_TO_USE.map((s) => s.step)).toEqual(['1', '2', '3', '4', '5', '6']);
+    expect(QUICK_STARTS).toHaveLength(9);
+    for (const q of QUICK_STARTS) {
+      expect(q.tool.length).toBeGreaterThan(0);
+      expect(q.install.length).toBeGreaterThan(0);
+      expect(q.firstUse.length).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe('layout wireframes', () => {
+  it('has 12 unique layouts in valid kinds', () => {
+    expect(LAYOUTS).toHaveLength(12);
+    const ids = LAYOUTS.map((l) => l.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    const kinds = new Set(['hero', 'bento', 'split', 'editorial', 'dashboard', 'pricing', 'portfolio', 'product', 'video', 'pricingfaq', 'docs', 'blog']);
+    for (const l of LAYOUTS) {
+      expect(kinds.has(l.kind)).toBe(true);
+      expect(l.name.length).toBeGreaterThan(0);
+      expect(l.description.length).toBeGreaterThan(0);
+    }
+  });
+});
