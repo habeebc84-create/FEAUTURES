@@ -3,7 +3,6 @@ import {
   AnimatePresence,
   animate,
   motion,
-  useAnimationControls,
   useMotionValue,
   useReducedMotion,
   useScroll,
@@ -51,11 +50,15 @@ export function CursorFollower() {
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 z-[90] rounded-full border-2 border-lime-500"
-      style={{ x: springX, y: springY, translateX: '-50%', translateY: '-50%' }}
-      animate={{ width: hovering ? 44 : 28, height: hovering ? 44 : 28, opacity: 0.9 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-    />
+      className="pointer-events-none fixed left-0 top-0 z-[90]"
+      style={{ x: springX, y: springY }}
+    >
+      <motion.div
+        className="-translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-lime-500"
+        animate={{ width: hovering ? 44 : 28, height: hovering ? 44 : 28, opacity: 0.9 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+      />
+    </motion.div>
   );
 }
 
@@ -194,49 +197,41 @@ export function ScrambleText({ text, accentFrom = -1, className = '' }: { text: 
 
 export function TickerStrip({ items }: { items: string[] }) {
   const reduce = useReducedMotion();
-  const controls = useAnimationControls();
-  const [paused, setPaused] = useState(false);
   const row = items.map((item) => (
     <span key={item} className="flex shrink-0 items-center gap-3 px-4 text-sm font-semibold text-slate-900">
       {item} <span aria-hidden="true" className="text-emerald-600">•</span>
     </span>
   ));
-  useEffect(() => {
-    if (reduce || paused) { controls.stop(); return; }
-    controls.start({ x: ['0%', '-50%'], transition: { repeat: Infinity, ease: 'linear', duration: Math.max(12, items.length * 2.5) } });
-  }, [reduce, paused, controls, items.length]);
   if (reduce) {
     return <p className="flex flex-wrap justify-center gap-x-2 gap-y-1 px-4 py-2 text-center text-sm font-semibold text-slate-900">{items.join(' · ')}</p>;
   }
   return (
-    <div
-      className="overflow-hidden border-y border-slate-200 bg-lime-100/70 py-2"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-    >
+    <div className="ticker-wrap overflow-hidden border-y border-slate-200 bg-lime-100/70 py-2">
       <span className="sr-only">{items.join(', ')}</span>
-      <motion.div aria-hidden="true" className="flex w-max" animate={controls}>
+      <div
+        aria-hidden="true"
+        className="ticker-track flex w-max"
+        style={{ animationDuration: `${Math.max(12, items.length * 2.5)}s` }}
+      >
         {row}{row}
-      </motion.div>
+      </div>
     </div>
   );
 }
 
-export type CarouselPhoto = { src: string; alt: string };
+export type StyleSlide = { id: string; label: string; node: ReactNode };
 
-export function Carousel({ photos, intervalMs = 4000 }: { photos: CarouselPhoto[]; intervalMs?: number }) {
+export function StyleCarousel({ slides, intervalMs = 4000 }: { slides: StyleSlide[]; intervalMs?: number }) {
   const reduce = useReducedMotion();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const count = photos.length;
+  const count = slides.length;
   useEffect(() => {
     if (reduce || paused || count < 2) return;
     const id = setInterval(() => setIndex((i) => (i + 1) % count), intervalMs);
     return () => clearInterval(id);
   }, [reduce, paused, count, intervalMs]);
-  const photo = photos[index];
+  const slide = slides[index];
   const go = (next: number) => setIndex(((next % count) + count) % count);
   return (
     <div
@@ -246,17 +241,17 @@ export function Carousel({ photos, intervalMs = 4000 }: { photos: CarouselPhoto[
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
-      <div className="relative h-72 w-full sm:h-96">
+      <div className="relative min-h-72 w-full sm:min-h-96">
         <AnimatePresence mode="wait">
           <motion.div
-            key={index}
+            key={slide.id}
             className="absolute inset-0"
             initial={reduce ? false : { opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             exit={reduce ? undefined : { opacity: 0, x: -24 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
           >
-            <img src={photo.src} alt={photo.alt} loading="lazy" className="h-full w-full object-cover" />
+            {slide.node}
             {!reduce && (
               <span aria-hidden="true" className="pointer-events-none absolute inset-0 flex">
                 <motion.span className="flex-1 bg-slate-950" style={{ originX: 0 }} initial={{ scaleX: 1 }} animate={{ scaleX: 0 }} transition={{ duration: 0.5, ease: 'easeInOut' }} />
@@ -266,57 +261,58 @@ export function Carousel({ photos, intervalMs = 4000 }: { photos: CarouselPhoto[
           </motion.div>
         </AnimatePresence>
       </div>
-      <p className="sr-only" aria-live="polite">{photo.alt}</p>
+      <p className="sr-only" aria-live="polite">{slide.label}</p>
       <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-2">
-        <button type="button" onClick={() => go(index - 1)} aria-label="Previous photo" className="rounded-full bg-black/50 px-2.5 py-1 text-sm font-bold text-white">‹</button>
-        {photos.map((p, i) => (
-          <button key={p.alt} type="button" onClick={() => go(i)} aria-label={`Show photo ${i + 1}: ${p.alt}`} aria-current={i === index} className={`h-2 rounded-full ${i === index ? 'w-5 bg-white' : 'w-2 bg-white/60'}`} />
+        <button type="button" onClick={() => go(index - 1)} aria-label="Previous style" className="rounded-full bg-black/50 px-2.5 py-1 text-sm font-bold text-white">‹</button>
+        {slides.map((sl, i) => (
+          <button key={sl.id} type="button" onClick={() => go(i)} aria-label={`Show style ${i + 1}: ${sl.label}`} aria-current={i === index} className={`h-2 rounded-full ${i === index ? 'w-5 bg-white' : 'w-2 bg-white/60'}`} />
         ))}
-        <button type="button" onClick={() => go(index + 1)} aria-label="Next photo" className="rounded-full bg-black/50 px-2.5 py-1 text-sm font-bold text-white">›</button>
+        <button type="button" onClick={() => go(index + 1)} aria-label="Next style" className="rounded-full bg-black/50 px-2.5 py-1 text-sm font-bold text-white">›</button>
       </div>
     </div>
   );
 }
 
-export function AnimatedNumber({ value, format, suffix = '' }: { value: number; format: (n: number) => string; suffix?: string }) {
-  const reduce = useReducedMotion();
-  const [display, setDisplay] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const started = useRef(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (!entries[0].isIntersecting || started.current) return;
-        started.current = true;
-        if (reduce) { setDisplay(value); return; }
-        const controls = animate(0, value, { duration: 1.2, ease: 'easeOut', onUpdate: (v) => setDisplay(v) });
-        return () => controls.stop();
-      },
-      { threshold: 0.4 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [value, reduce]);
-  return <span ref={ref}>{format(Math.round(display))}{suffix}</span>;
+export type LayoutItem = { id: string; name: string; use: string; description: string; kind: 'hero' | 'bento' | 'split' | 'editorial' | 'dashboard' | 'pricing' | 'portfolio' | 'product' };
+
+function Wireframe({ kind }: { kind: LayoutItem['kind'] }) {
+  const bar = 'rounded bg-slate-200';
+  const dark = 'rounded bg-slate-800';
+  const accent = 'rounded bg-lime-300';
+  const line = 'h-2 rounded bg-slate-200';
+  switch (kind) {
+    case 'hero':
+      return <div className="space-y-2 p-3"><div className={`${dark} h-5 w-3/4`} /><div className={`${line} w-1/2`} /><div className={`${line} w-2/3`} /><div className={`${accent} h-6 w-24`} /></div>;
+    case 'bento':
+      return <div className="grid grid-cols-3 gap-2 p-3"><div className={`${dark} col-span-2 h-12`} /><div className={`${bar} h-12`} /><div className={`${bar} h-12`} /><div className={`${accent} col-span-2 h-12`} /></div>;
+    case 'split':
+      return <div className="flex gap-2 p-3"><div className={`${dark} h-16 flex-1`} /><div className="flex-1 space-y-2"><div className={line} /><div className={line} /><div className={`${accent} h-6 w-20`} /></div></div>;
+    case 'editorial':
+      return <div className="space-y-2 p-3"><div className={`${dark} h-6 w-2/3`} /><div className="flex gap-2"><div className="flex-1 space-y-1.5"><div className={line} /><div className={line} /><div className={line} /></div><div className="flex-1 space-y-1.5"><div className={line} /><div className={line} /><div className={line} /></div></div></div>;
+    case 'dashboard':
+      return <div className="flex gap-2 p-3"><div className={`${dark} w-8 rounded`} /><div className="flex-1 space-y-2"><div className="flex items-end gap-1.5"><div className={`${accent} h-6 w-4`} /><div className={`${accent} h-10 w-4`} /><div className={`${accent} h-8 w-4`} /><div className={`${accent} h-12 w-4`} /></div><div className={line} /></div></div>;
+    case 'pricing':
+      return <div className="flex items-end gap-2 p-3"><div className={`${bar} h-12 flex-1`} /><div className={`${dark} h-16 flex-1`} /><div className={`${bar} h-12 flex-1`} /></div>;
+    case 'portfolio':
+      return <div className="grid grid-cols-3 gap-2 p-3"><div className={`${dark} h-12`} /><div className={`${bar} h-12`} /><div className={`${bar} h-12`} /><div className={`${line} col-span-3`} /></div>;
+    case 'product':
+      return <div className="space-y-2 p-3"><div className={`${dark} h-12`} /><div className="flex gap-2"><div className={`${bar} h-6 flex-1`} /><div className={`${bar} h-6 flex-1`} /><div className={`${bar} h-6 flex-1`} /></div></div>;
+  }
 }
 
-export type GalleryItem = { id: string; name: string; description: string; imageUrl: string; group: string };
-
-export function Gallery({ items }: { items: GalleryItem[] }) {
+export function LayoutShowcase({ items }: { items: LayoutItem[] }) {
   const reduce = useReducedMotion();
-  const [group, setGroup] = useState('All');
-  const groups = ['All', ...Array.from(new Set(items.map((i) => i.group)))];
-  const shown = group === 'All' ? items : items.filter((i) => i.group === group);
+  const [use, setUse] = useState('All');
+  const uses = ['All', ...Array.from(new Set(items.map((i) => i.use)))];
+  const shown = use === 'All' ? items : items.filter((i) => i.use === use);
   return (
     <div>
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Filter gallery">
-        {groups.map((g) => (
-          <button key={g} type="button" onClick={() => setGroup(g)} aria-pressed={group === g} className={`rounded-full border px-4 py-1.5 text-sm font-semibold ${group === g ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-300'}`}>{g}</button>
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Filter layouts by use">
+        {uses.map((u) => (
+          <button key={u} type="button" onClick={() => setUse(u)} aria-pressed={use === u} className={`rounded-full border px-4 py-1.5 text-sm font-semibold ${use === u ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-300'}`}>{u}</button>
         ))}
       </div>
-      <motion.div layout className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      <motion.div layout className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <AnimatePresence mode="popLayout">
           {shown.map((item) => (
             <motion.figure
@@ -328,7 +324,7 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
               transition={{ duration: 0.3, ease: 'easeOut' }}
               className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
             >
-              <img src={item.imageUrl} alt={`${item.name} — sample photo`} loading="lazy" className="h-32 w-full object-cover sm:h-40" />
+              <div aria-hidden="true" className="border-b border-slate-100 bg-slate-50"><Wireframe kind={item.kind} /></div>
               <figcaption className="p-3">
                 <span className="block font-bold">{item.name}</span>
                 <span className="mt-0.5 block text-sm text-slate-500">{item.description}</span>
@@ -339,4 +335,28 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
       </motion.div>
     </div>
   );
+}
+
+export function AnimatedNumber({ value, format, suffix = '' }: { value: number; format: (n: number) => string; suffix?: string }) {
+  const reduce = useReducedMotion();
+  const [display, setDisplay] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+  const controlsRef = useRef<ReturnType<typeof animate> | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0].isIntersecting || started.current) return;
+        started.current = true;
+        if (reduce) { setDisplay(value); return; }
+        controlsRef.current = animate(0, value, { duration: 1.2, ease: 'easeOut', onUpdate: (v) => setDisplay(v) });
+      },
+      { threshold: 0.4 },
+    );
+    observer.observe(el);
+    return () => { observer.disconnect(); controlsRef.current?.stop(); };
+  }, [value, reduce]);
+  return <span ref={ref}>{format(Math.round(display))}{suffix}</span>;
 }
